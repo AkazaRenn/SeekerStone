@@ -4,7 +4,8 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/run/host/usr/include/**"
+                "/run/host/usr/include/qt*/**",
+                "/usr/include/qt*/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

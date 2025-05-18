@@ -55,6 +55,9 @@ compile_commands.json
 *creator.user*
 *_qmlcache.qrc
 
+# VS Code
+.vscode/settings.json
+
 # Repo specific
 build*/
 .qtcreator
