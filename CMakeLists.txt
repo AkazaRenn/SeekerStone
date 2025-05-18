@@ -11,13 +11,15 @@ find_package(SDL3 REQUIRED)
 
 qt_standard_project_setup(REQUIRES 6.8)
 
+set(MAIN_SOURCE "src/Main.cpp")
+
 qt_add_executable(appSeekerStone
-    src/main.cpp
+    ${MAIN_SOURCE}
 )
 
 file(GLOB_RECURSE QML_FILES RELATIVE ${CMAKE_SOURCE_DIR} "qml/*.qml")
 file(GLOB_RECURSE SOURCE_FILES RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp" "src/*.h")
-list(FILTER SOURCE_FILES EXCLUDE REGEX "src/main.cpp")
+list(FILTER SOURCE_FILES EXCLUDE REGEX ${MAIN_SOURCE})
 
 qt_add_qml_module(appSeekerStone
     URI SeekerStone
