@@ -42,6 +42,9 @@ target_wrapper.*
 *.qmlproject.user
 *.qmlproject.user.*
 
+# QtCreator Resources
+.rcc/
+
 # QtCreator CMake
 CMakeLists.txt.user*
 
@@ -50,5 +53,8 @@ compile_commands.json
 
 # QtCreator local machine specific files for imported projects
 *creator.user*
-
 *_qmlcache.qrc
+
+# Repo specific
+build*/
+.qtcreator

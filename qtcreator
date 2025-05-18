@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+DIR=$(cd -- "$(dirname -- "$0")" && pwd)
+toolbox run --container dev $DIR/.qtcreator/bin/qtcreator $DIR/CMakeLists.txt
