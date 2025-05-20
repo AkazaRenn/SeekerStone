@@ -1,7 +1,7 @@
 #include <QGuiApplication>
 
-#include "InputDetector.h"
-#include "Logger.h"
+#include "InputDetector.hpp"
+#include "Logger.hpp"
 
 namespace {
 constexpr QEvent::Type  QEVENT_MOUSE_KEYBOARD_MIN_INCLUDE = QEvent::Type::MouseButtonPress;

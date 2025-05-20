@@ -18,7 +18,7 @@ qt_add_executable(appSeekerStone
 )
 
 file(GLOB_RECURSE QML_FILES RELATIVE ${CMAKE_SOURCE_DIR} "qml/*.qml")
-file(GLOB_RECURSE SOURCE_FILES RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp" "src/*.h")
+file(GLOB_RECURSE SOURCE_FILES RELATIVE ${CMAKE_SOURCE_DIR} "src/*.hpp" "src/*.cpp")
 list(FILTER SOURCE_FILES EXCLUDE REGEX ${MAIN_SOURCE})
 
 qt_add_qml_module(appSeekerStone
