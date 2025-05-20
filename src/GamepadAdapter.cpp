@@ -1,9 +1,9 @@
 #include <QGuiApplication>
 #include <QKeyEvent>
-#include <SDL3/SDL_gamecontroller.h>
+#include <SDL3/SDL_gamepad.h>
 
 #include "GamepadAdapter.hpp"
-#include "Logger.hpp"
+#include "utils/Logger.hpp"
 
 namespace {
 constexpr SDL_EventType SDL_EVENT_GAMEPAD_MIN_INCLUDE = SDL_EVENT_GAMEPAD_AXIS_MOTION;
@@ -65,28 +65,28 @@ void GamepadAdapter::onGamepadButton(bool buttonDown, Uint8 button) {
 
     Qt::Key qtKey;
     switch (button) {
-        case SDL_CONTROLLER_BUTTON_DPAD_UP:
+        case SDL_GamepadButton::SDL_GAMEPAD_BUTTON_DPAD_UP:
             qtKey = Qt::Key_Up;
             break;
-        case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+        case SDL_GamepadButton::SDL_GAMEPAD_BUTTON_DPAD_DOWN:
             qtKey = Qt::Key_Down;
             break;
-        case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+        case SDL_GamepadButton::SDL_GAMEPAD_BUTTON_DPAD_LEFT:
             qtKey = Qt::Key_Left;
             break;
-        case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+        case SDL_GamepadButton::SDL_GAMEPAD_BUTTON_DPAD_RIGHT:
             qtKey = Qt::Key_Right;
             break;
-        case SDL_CONTROLLER_BUTTON_A:
+        case SDL_GamepadButton::SDL_GAMEPAD_BUTTON_SOUTH:
             qtKey = Qt::Key_Return;
             break;
-        case SDL_CONTROLLER_BUTTON_B:
+        case SDL_GamepadButton::SDL_GAMEPAD_BUTTON_EAST:
             qtKey = Qt::Key_Escape;
             break;
-        case SDL_CONTROLLER_BUTTON_X:
+        case SDL_GamepadButton::SDL_GAMEPAD_BUTTON_WEST:
             qtKey = Qt::Key_Backspace;
             break;
-        case SDL_CONTROLLER_BUTTON_Y:
+        case SDL_GamepadButton::SDL_GAMEPAD_BUTTON_NORTH:
             qtKey = Qt::Key_Space;
             break;
         default:
