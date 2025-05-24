@@ -1,6 +1,5 @@
 #include <QGuiApplication>
 #include <QKeyEvent>
-#include <SDL3/SDL_gamepad.h>
 
 #include "GamepadAdapter.hpp"
 #include "utils/Logger.hpp"
@@ -8,6 +7,9 @@
 namespace {
 constexpr SDL_EventType SDL_EVENT_GAMEPAD_MIN_INCLUDE = SDL_EVENT_GAMEPAD_AXIS_MOTION;
 constexpr SDL_EventType SDL_EVENT_GAMEPAD_MAX_EXCLUDE = SDL_EVENT_FINGER_DOWN;
+constexpr Sint16        SDL_TRIGGER_AXIS_VALUE_MIN    = 0;
+constexpr Sint16        SDL_TRIGGER_AXIS_VALUE_MAX    = SDL_JOYSTICK_AXIS_MAX;
+constexpr Sint16        SDL_TRIGGER_AXIS_VALUE_CENTER = (SDL_TRIGGER_AXIS_VALUE_MAX + SDL_TRIGGER_AXIS_VALUE_MIN) / 2;
 } // namespace
 
 GamepadAdapter::GamepadAdapter(QObject* parent)
@@ -50,11 +52,13 @@ int GamepadAdapter::sdlEventHandler(void* data) {
                     emit gamepadAdapter->signalGamepadConnected();
                     break;
                 case SDL_EVENT_GAMEPAD_BUTTON_DOWN:
-                    gamepadAdapter->onGamepadButton(true, event.gbutton.button);
+                    gamepadAdapter->onGamepadButton(true, static_cast<SDL_GamepadButton>(event.gbutton.button));
                     break;
                 case SDL_EVENT_GAMEPAD_BUTTON_UP:
-                    gamepadAdapter->onGamepadButton(false, event.gbutton.button);
+                    gamepadAdapter->onGamepadButton(false, static_cast<SDL_GamepadButton>(event.gbutton.button));
                     break;
+                case SDL_EVENT_GAMEPAD_AXIS_MOTION:
+                    gamepadAdapter->onGamepadAxis(event.gaxis.value, static_cast<SDL_GamepadAxis>(event.gaxis.axis));
                 default:
                     break;
             }
@@ -66,39 +70,33 @@ int GamepadAdapter::sdlEventHandler(void* data) {
     return 0;
 }
 
-void GamepadAdapter::onGamepadButton(bool buttonDown, Uint8 button) {
+void GamepadAdapter::onGamepadButton(bool buttonDown, SDL_GamepadButton button) {
     logDebug() << "Gamepad button " << buttonDown << ": " << button;
 
-    Qt::Key qtKey;
-    switch (button) {
-        case SDL_GamepadButton::SDL_GAMEPAD_BUTTON_DPAD_UP:
-            qtKey = Qt::Key_Up;
-            break;
-        case SDL_GamepadButton::SDL_GAMEPAD_BUTTON_DPAD_DOWN:
-            qtKey = Qt::Key_Down;
-            break;
-        case SDL_GamepadButton::SDL_GAMEPAD_BUTTON_DPAD_LEFT:
-            qtKey = Qt::Key_Left;
-            break;
-        case SDL_GamepadButton::SDL_GAMEPAD_BUTTON_DPAD_RIGHT:
-            qtKey = Qt::Key_Right;
-            break;
-        case SDL_GamepadButton::SDL_GAMEPAD_BUTTON_SOUTH:
-            qtKey = Qt::Key_Return;
-            break;
-        case SDL_GamepadButton::SDL_GAMEPAD_BUTTON_EAST:
-            qtKey = Qt::Key_Escape;
-            break;
-        case SDL_GamepadButton::SDL_GAMEPAD_BUTTON_WEST:
-            qtKey = Qt::Key_Backspace;
-            break;
-        case SDL_GamepadButton::SDL_GAMEPAD_BUTTON_NORTH:
-            qtKey = Qt::Key_Space;
-            break;
-        default:
-            return;
+    Qt::Key      qtKey;
+    QEvent::Type qtEvent = buttonDown ? QEvent::KeyPress : QEvent::KeyRelease;
+
+    if (gamepadButtonMapping.contains(button)) {
+        qtKey = gamepadButtonMapping.at(button);
+    } else {
+        return;
     }
 
-    auto keyEvent = new QKeyEvent(buttonDown ? QEvent::KeyPress : QEvent::KeyRelease, qtKey, Qt::NoModifier);
-    QGuiApplication::postEvent(QGuiApplication::focusObject(), keyEvent);
+    QGuiApplication::postEvent(QGuiApplication::focusObject(), new QKeyEvent(qtEvent, qtKey, Qt::NoModifier));
+}
+
+void GamepadAdapter::onGamepadAxis(Sint16 axisValue, SDL_GamepadAxis axis) {
+    logDebug() << "Gamepad axis " << axis << ": " << axisValue;
+
+    QEvent::Type qtEvent = (axisValue >= SDL_TRIGGER_AXIS_VALUE_CENTER) ? QEvent::KeyPress : QEvent::KeyRelease;
+    Qt::Key      qtKey;
+
+    if (gamepadAxisAsButtonMapping.contains(axis) && gamepadAxisAsButtonMapping.at(axis).second != qtEvent) {
+        qtKey = gamepadAxisAsButtonMapping.at(axis).first;
+    } else {
+        return;
+    }
+
+    gamepadAxisAsButtonMapping.at(axis).second = qtEvent;
+    QGuiApplication::postEvent(QGuiApplication::focusObject(), new QKeyEvent(qtEvent, qtKey, Qt::NoModifier));
 }
