@@ -1,5 +1,6 @@
-#include <QDebug>
 #include <QElapsedTimer>
+
+#include "Logger.hpp"
 
 class RateLimiter {
     public:
@@ -11,7 +12,7 @@ class RateLimiter {
 
         void execute() {
             if (timer.elapsed() < intervalMs) {
-                qDebug() << "Rate limited: Ignored";
+                logDebug() << "Rate limited: Ignored";
                 return;
             }
             function();

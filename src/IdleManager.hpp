@@ -18,7 +18,7 @@ class IdleManager : public QObject {
 
     private:
         QTimer idleTimer;
-        RateLimiter rateLimiter;
+        RateLimiter idleTimerResetter;
 
         void onIdle();
         void setupIdleTimer();

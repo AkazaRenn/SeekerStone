@@ -2,42 +2,63 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Window
 
-import "utils/FocusManager.js" as FocusManager
-
 ApplicationWindow {
-    property var focusableItems: []
+    visibility: Window.FullScreen
+    flags: Qt.FramelessWindowHint
 
-    Column {
-        anchors.centerIn: parent
-        spacing: 20
+    // Utils.NavigableColumn {
+    //     id: mainMenu
+    //     anchors.centerIn: parent
+    //     spacing: 20
+    //     focus: true
 
-        Button {
-            id: playButton
-            text: "Play"
-        }
+    //     Button {
+    //         id: playButton
+    //         text: "Play"
+    //         onClicked: console.log("Play clicked")
+    //     }
 
-        TextField {
-            id: nameField
-            text: "Enter name"
-        }
+    //     TextField {
+    //         id: nameField
+    //         text: "Enter name"
+    //     }
 
-        Slider {
-            id: volumeSlider
-            value: 50
-        }
+    //     Slider {
+    //         id: volumeSlider
+    //         value: 50
+    //     }
 
-        Button {
-            id: exitButton
-            text: "Exit"
-        }
-    }
+    //     Button {
+    //         id: exitButton
+    //         text: "Exit"
+    //         onClicked: Qt.quit()
+    //     }
+
+    //     // Example of a navigable row inside the column
+    //     Utils.NavigableRow {
+    //         id: optionsRow
+    //         spacing: 10
+    //         height: 40
+
+    //         Button {
+    //             text: "Option 1"
+    //             onClicked: console.log("Option 1 clicked")
+    //         }
+
+    //         Button {
+    //             text: "Option 2"
+    //             onClicked: console.log("Option 2 clicked")
+    //         }
+
+    //         Button {
+    //             text: "Option 3"
+    //             onClicked: console.log("Option 3 clicked")
+    //         }
+    //     }
+    // }
 
     Component.onCompleted: {
-        focusableItems = parent.children.filter(item => item.Focus)
+        Screen.primary.virtualGeometry.width = width
+        Screen.primary.virtualGeometry.height = height
     }
-
-    Keys.onDownPressed: FocusManager.moveFocus(focusableItems, focusItem, "down")
-    Keys.onUpPressed: FocusManager.moveFocus(focusableItems, focusItem, "up")
-    Keys.onLeftPressed: FocusManager.moveFocus(focusableItems, focusItem, "left")
-    Keys.onRightPressed: FocusManager.moveFocus(focusableItems, focusItem, "right")
 }

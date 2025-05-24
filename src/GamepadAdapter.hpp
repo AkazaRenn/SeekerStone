@@ -10,11 +10,12 @@ class GamepadAdapter : public QObject {
         ~GamepadAdapter();
 
     private:
-        std::unique_ptr<SDL_Thread> sdlEventThread;
+        std::unique_ptr<SDL_Thread, void (*)(SDL_Thread*)> sdlEventThread;
 
         void onGamepadButton(bool buttonDown, Uint8 button);
 
-        static int sdlEventHandler(void* data);
+        static int  sdlEventHandler(void* data);
+        static void sdlThreadCleanup(SDL_Thread* thread);
 
     signals:
         void signalGamepadAction();

@@ -11,7 +11,7 @@ constexpr QEvent::Type QEVENT_MOUSE_KEYBOARD_MAX_INCLUDE = QEvent::Type::KeyRele
 IdleManager::IdleManager(QObject* parent)
     : QObject(parent)
     , idleTimer(this)
-    , rateLimiter(1000, std::bind(&IdleManager::onIdle, this)) {
+    , idleTimerResetter(1000, std::bind(&IdleManager::onIdle, this)) {
     // Install global event filter for keyboard and mouse
     qApp->installEventFilter(this);
 
@@ -29,7 +29,7 @@ bool IdleManager::eventFilter(QObject* watched, QEvent* event) {
     logDebug() << "QEvent: " << event->type();
 
     if (event->type() >= QEVENT_MOUSE_KEYBOARD_MIN_INCLUDE && event->type() <= QEVENT_MOUSE_KEYBOARD_MAX_INCLUDE) {
-        rateLimiter.execute();
+        idleTimerResetter.execute();
     }
 
     // Always return false to allow the event to be processed by other filters

@@ -12,7 +12,7 @@ constexpr SDL_EventType SDL_EVENT_GAMEPAD_MAX_EXCLUDE = SDL_EVENT_FINGER_DOWN;
 
 GamepadAdapter::GamepadAdapter(QObject* parent)
     : QObject(parent)
-    , sdlEventThread(SDL_CreateThread(sdlEventHandler, "EventThread", nullptr)) {
+    , sdlEventThread(SDL_CreateThread(sdlEventHandler, "EventThread", this), sdlThreadCleanup) {
     // Initialize SDL subsystems
     if (SDL_Init(SDL_INIT_GAMEPAD) < 0) {
         logError() << "SDL could not initialize! SDL Error: " << SDL_GetError();
@@ -21,6 +21,12 @@ GamepadAdapter::GamepadAdapter(QObject* parent)
 
 GamepadAdapter::~GamepadAdapter() {
     SDL_Quit();
+}
+
+void GamepadAdapter::sdlThreadCleanup(SDL_Thread* thread) {
+    logDebug() << "SDL thread cleanup";
+    SDL_WaitThread(thread, nullptr);
+    logDebug() << "SDL thread cleanup done";
 }
 
 int GamepadAdapter::sdlEventHandler(void* data) {
