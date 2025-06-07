@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QEvent>
 #include <QObject>
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_gamepad.h>
