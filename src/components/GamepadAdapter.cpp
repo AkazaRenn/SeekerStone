@@ -13,15 +13,21 @@ constexpr Sint16        SDL_TRIGGER_AXIS_VALUE_CENTER = (SDL_TRIGGER_AXIS_VALUE_
 } // namespace
 
 GamepadAdapter::GamepadAdapter(QObject* parent)
-    : QObject(parent)
-    , sdlEventThread(SDL_CreateThread(sdlEventHandler, "EventThread", this), sdlThreadCleanup) {
+    : QObject(parent),
+    sdlEventThread(nullptr, sdlThreadCleanup){
     // Initialize SDL subsystems
-    if (SDL_Init(SDL_INIT_GAMEPAD) < 0) {
+    if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_GAMEPAD) < 0) {
         logError << "SDL could not initialize! SDL Error:" << SDL_GetError();
+    } else {
+        sdlEventThread.reset(SDL_CreateThread(sdlEventHandler, "EventThread", this));
     }
 }
 
 void GamepadAdapter::sdlThreadCleanup(SDL_Thread* thread) {
+    if (!thread) {
+        return;
+    }
+
     logDebug << "SDL thread cleanup";
 
     SDL_Event event;
@@ -68,7 +74,7 @@ int GamepadAdapter::sdlEventHandler(void* data) {
             running = false;
         }
     }
-    logDebug << "Stopping SDL_WaitEvent loop";
+    logDebug << "Stopping SDL_WaitEvent loop:" << SDL_GetError();
     return 0;
 }
 
