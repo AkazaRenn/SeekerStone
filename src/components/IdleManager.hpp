@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QTimer>
 
-#include "utils/RateLimiter.hpp"
+#include "../utils/RateLimiter.hpp"
 
 class IdleManager : public QObject {
         Q_OBJECT

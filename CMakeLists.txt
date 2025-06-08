@@ -6,7 +6,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(cmake/utils.cmake)
 
 pascal_to_camel(${PROJECT_NAME} BIN_NAME)
-pascal_to_spaced(${PROJECT_NAME} SPACED_NAME)
 
 find_package(Qt6 REQUIRED COMPONENTS Quick)
 find_package(SDL3 REQUIRED)

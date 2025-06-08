@@ -3,9 +3,9 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
-#include "GamepadAdapter.hpp"
-#include "IdleManager.hpp"
-#include "Link.hpp"
+#include "components/GamepadAdapter.hpp"
+#include "components/IdleManager.hpp"
+#include "components/Link.hpp"
 
 class Main : public QGuiApplication {
     public:
