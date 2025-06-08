@@ -10,11 +10,10 @@
 #include "RateLimiter.hpp"
 
 #ifdef QT_DEBUG
-#define logDebug qDebug()
+#define logDebug logInfo
 #else
-#define logDebug \
-    if (false)   \
-    qDebug() // Prevents execution in release
+#define QT_NO_DEBUG_OUTPUT
+#define logDebug qDebug()
 #endif
 #define logInfo    qInfo()
 #define logWarning qWarning()

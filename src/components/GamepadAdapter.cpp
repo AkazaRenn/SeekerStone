@@ -17,7 +17,7 @@ GamepadAdapter::GamepadAdapter(QObject* parent)
     , sdlEventThread(SDL_CreateThread(sdlEventHandler, "EventThread", this), sdlThreadCleanup) {
     // Initialize SDL subsystems
     if (SDL_Init(SDL_INIT_GAMEPAD) < 0) {
-        logError << "SDL could not initialize! SDL Error: " << SDL_GetError();
+        logError << "SDL could not initialize! SDL Error:" << SDL_GetError();
     }
 }
 
@@ -45,7 +45,7 @@ int GamepadAdapter::sdlEventHandler(void* data) {
 
     logDebug << "Starting SDL_WaitEvent loop";
     while (running && SDL_WaitEvent(&event)) {
-        logDebug << "SDL event: " << event.type;
+        logDebug << "SDL event:" << event.type;
         if (event.type >= SDL_EVENT_GAMEPAD_MIN_INCLUDE && event.type < SDL_EVENT_GAMEPAD_MAX_EXCLUDE) {
             emit gamepadAdapter->signalGamepadAction();
 
@@ -73,7 +73,7 @@ int GamepadAdapter::sdlEventHandler(void* data) {
 }
 
 void GamepadAdapter::onGamepadButton(bool buttonDown, SDL_GamepadButton button) {
-    logDebug << "Gamepad button " << buttonDown << ": " << button;
+    logDebug << "Gamepad button" << buttonDown << ":" << button;
 
     Qt::Key      qtKey;
     QEvent::Type qtEvent = buttonDown ? QEvent::KeyPress : QEvent::KeyRelease;
@@ -88,7 +88,7 @@ void GamepadAdapter::onGamepadButton(bool buttonDown, SDL_GamepadButton button) 
 }
 
 void GamepadAdapter::onGamepadAxis(Sint16 axisValue, SDL_GamepadAxis axis) {
-    logDebug << "Gamepad axis " << axis << ": " << axisValue;
+    logDebug << "Gamepad axis" << axis << ":" << axisValue;
 
     QEvent::Type qtEvent = (axisValue >= SDL_TRIGGER_AXIS_VALUE_CENTER) ? QEvent::KeyPress : QEvent::KeyRelease;
     Qt::Key      qtKey;
