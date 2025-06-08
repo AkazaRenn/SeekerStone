@@ -68,9 +68,4 @@ ApplicationWindow {
             stackView.pop();
         }
     }
-
-    Component.onCompleted: {
-        Screen.primary.virtualGeometry.width = width;
-        Screen.primary.virtualGeometry.height = height;
-    }
 }
