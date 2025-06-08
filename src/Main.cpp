@@ -1,10 +1,10 @@
 #include <QQmlContext>
 
 #include "Main.hpp"
+#include "Logger.hpp"
 
 Main::Main(int argc, char* argv[])
-    : QGuiApplication(argc, argv)
-    , logger(Logger::instance()) {
+    : QGuiApplication(argc, argv) {
     QObject::connect(
         &engine, &QQmlApplicationEngine::objectCreationFailed, this,
         []() {
@@ -15,14 +15,16 @@ Main::Main(int argc, char* argv[])
     // Expose backend to QML
     engine.rootContext()->setContextProperty("link", &link);
 
-    engine.loadFromModule("SeekerStone", "Main");
+    engine.loadFromModule(APP_NAME, "Main");
 
     installEventFilter(&idleManager);
+
+    logInfo << "Initialized";
 }
 
 Main::~Main() {
     removeEventFilter(&idleManager);
-    logInfo << "Goodbye";
+    logInfo << "Exited";
 }
 
 int main(int argc, char* argv[]) {

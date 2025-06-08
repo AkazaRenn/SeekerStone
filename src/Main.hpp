@@ -6,7 +6,6 @@
 #include "GamepadAdapter.hpp"
 #include "IdleManager.hpp"
 #include "Link.hpp"
-#include "Logger.hpp"
 
 class Main : public QGuiApplication {
     public:
@@ -14,8 +13,6 @@ class Main : public QGuiApplication {
         ~Main();
 
     private:
-        const Logger& logger;
-
         QQmlApplicationEngine engine;
         GamepadAdapter        gamepadAdapter;
         IdleManager           idleManager;

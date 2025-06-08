@@ -5,8 +5,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(cmake/utils.cmake)
 
-set(APP_NAME "SeekerStone")
-lower_initial_char(${APP_NAME} BIN_NAME)
+pascal_to_camel(${PROJECT_NAME} BIN_NAME)
+pascal_to_spaced(${PROJECT_NAME} SPACED_NAME)
 
 find_package(Qt6 REQUIRED COMPONENTS Quick)
 find_package(SDL3 REQUIRED)
@@ -19,14 +19,14 @@ qt_add_executable(${BIN_NAME}
     ${MAIN_SOURCE}
 )
 
-target_compile_definitions(${BIN_NAME} PRIVATE APP_NAME="${APP_NAME}")
+target_compile_definitions(${BIN_NAME} PRIVATE APP_NAME="${PROJECT_NAME}")
 
 file(GLOB_RECURSE QML_FILES RELATIVE ${CMAKE_SOURCE_DIR} "qml/*.qml")
 file(GLOB_RECURSE SOURCE_FILES RELATIVE ${CMAKE_SOURCE_DIR} "src/*.hpp" "src/*.cpp")
 list(FILTER SOURCE_FILES EXCLUDE REGEX ${MAIN_SOURCE})
 
 qt_add_qml_module(${BIN_NAME}
-    URI ${APP_NAME}
+    URI ${PROJECT_NAME}
     VERSION 1.0
     QML_FILES ${QML_FILES}
     SOURCES ${SOURCE_FILES}
