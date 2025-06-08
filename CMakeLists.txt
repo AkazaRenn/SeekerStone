@@ -3,11 +3,10 @@ cmake_minimum_required(VERSION 3.16)
 project(SeekerStone VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+include(cmake/utils.cmake)
+
 set(APP_NAME "SeekerStone")
-string(SUBSTRING ${APP_NAME} 0 1 firstChar)
-string(TOLOWER ${firstChar} firstCharLower)
-string(SUBSTRING ${APP_NAME} 1 -1 restOfString)
-set(BIN_NAME "${firstCharLower}${restOfString}")
+lower_initial_char(${APP_NAME} BIN_NAME)
 
 find_package(Qt6 REQUIRED COMPONENTS Quick)
 find_package(SDL3 REQUIRED)
