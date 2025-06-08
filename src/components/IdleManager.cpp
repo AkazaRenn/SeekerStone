@@ -21,9 +21,8 @@ IdleManager::~IdleManager() {
 }
 
 bool IdleManager::eventFilter(QObject* watched, QEvent* event) {
-    logDebug << "QEvent:" << event->type();
-
     if (event->type() >= QEVENT_MOUSE_KEYBOARD_MIN_INCLUDE && event->type() <= QEVENT_MOUSE_KEYBOARD_MAX_INCLUDE) {
+        logDebug << "QEvent:" << event->type();
         idleTimerResetter.execute();
     }
 
