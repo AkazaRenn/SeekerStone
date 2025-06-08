@@ -1,6 +1,6 @@
 #include <QTimer>
 
-#include "../Logger.hpp"
+#include "../utils/Logger.hpp"
 #include "Link.hpp"
 
 Link::Link(QObject* parent)

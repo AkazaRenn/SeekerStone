@@ -6,7 +6,7 @@
 #include <QTextStream>
 #include <mutex>
 
-#include "utils/RateLimiter.hpp"
+#include "RateLimiter.hpp"
 
 #ifdef QT_DEBUG
 #define logDebug qDebug()

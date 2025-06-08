@@ -1,7 +1,7 @@
 #include <QQmlContext>
 
 #include "Main.hpp"
-#include "Logger.hpp"
+#include "utils/Logger.hpp"
 
 Main::Main(int argc, char* argv[])
     : QGuiApplication(argc, argv) {

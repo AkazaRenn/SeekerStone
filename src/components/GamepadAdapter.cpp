@@ -2,7 +2,7 @@
 #include <QKeyEvent>
 
 #include "GamepadAdapter.hpp"
-#include "../Logger.hpp"
+#include "../utils/Logger.hpp"
 
 namespace {
 constexpr SDL_EventType SDL_EVENT_GAMEPAD_MIN_INCLUDE = SDL_EVENT_GAMEPAD_AXIS_MOTION;
