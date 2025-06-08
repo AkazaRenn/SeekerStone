@@ -42,7 +42,7 @@ void Logger::openLogFile() {
             }
         }
     }
-    
+
     // Remove old logs
     QDir logDir(logDirPath);
     logDir.setFilter(QDir::Files | QDir::NoDotAndDotDot);
@@ -97,12 +97,16 @@ void Logger::writeLogToFile(QtMsgType type, const QMessageLogContext& context, c
             break;
     }
 
-    std::lock_guard<std::mutex> lock(logTextStreamMutex);
-    if (logTextStream.device()) {
-        logTextStream << "[" << QDateTime::currentDateTime().toString("hh:mm:ss") << '.' << nanosecondsNow() << "]"
-                      << "[" << level << "]"
-                      << "[" << std::filesystem::path(context.file).filename().string().c_str() << ":" << context.line
-                      << "]" << msg << '\n';
-        logTextStream.flush();
+    {
+        std::lock_guard<std::mutex> lock(logTextStreamMutex);
+        if (logTextStream.device()) {
+            logTextStream << "[" << QDateTime::currentDateTime().toString("hh:mm:ss") << '.' << nanosecondsNow() << "]"
+                          << "[" << level << "]"
+                          << "[" << std::filesystem::path(context.file).filename().string().c_str() << ":"
+                          << context.line << "]" << msg << '\n';
+            logTextStream.flush();
+        }
     }
+
+    logRotator.execute();
 }
