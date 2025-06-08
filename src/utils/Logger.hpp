@@ -4,6 +4,7 @@
 #include <QFile>
 #include <QMessageLogger>
 #include <QTextStream>
+#include <filesystem>
 #include <mutex>
 
 #include "RateLimiter.hpp"
@@ -29,13 +30,15 @@ class Logger {
         explicit Logger();
         ~Logger();
 
-        QFile              logFile;
-        QTextStream        logTextStream;
-        std::mutex         logTextStreamMutex;
-        RateLimiterByCount logRotator;
+        QFile                       logFile;
+        const std::filesystem::path logDir;
+        QTextStream                 logTextStream;
+        std::mutex                  logTextStreamMutex;
+        RateLimiterByCount          logRotator;
 
-        void    openLogFile();
-        QString nanosecondsNow();
-        void    rotateLogFile();
-        void    writeLogToFile(QtMsgType type, const QMessageLogContext& context, const QString& msg);
+        void                  openLogFile();
+        std::filesystem::path getLogDir();
+        QString               nanosecondsNow();
+        void                  rotateLogFile();
+        void                  writeLogToFile(QtMsgType type, const QMessageLogContext& context, const QString& msg);
 };
