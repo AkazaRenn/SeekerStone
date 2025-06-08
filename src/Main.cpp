@@ -1,23 +1,30 @@
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
+#include <QQmlContext>
 
 #include "Main.hpp"
 
-int Main::run(int argc, char* argv[]) {
-    QGuiApplication app(argc, argv);
-
-    QQmlApplicationEngine engine;
+Main::Main(int argc, char* argv[])
+    : QGuiApplication(argc, argv)
+    , logger(Logger::instance()) {
     QObject::connect(
-        &engine, &QQmlApplicationEngine::objectCreationFailed, &app,
+        &engine, &QQmlApplicationEngine::objectCreationFailed, this,
         []() {
             QCoreApplication::exit(-1);
         },
         Qt::QueuedConnection);
+
+    // Expose backend to QML
+    engine.rootContext()->setContextProperty("link", &link);
+
     engine.loadFromModule("SeekerStone", "Main");
 
-    return app.exec();
+    installEventFilter(&idleManager);
+}
+
+Main::~Main() {
+    removeEventFilter(&idleManager);
+    logInfo << "Goodbye";
 }
 
 int main(int argc, char* argv[]) {
-    return Main().run(argc, argv);
+    return Main(argc, argv).exec();
 }

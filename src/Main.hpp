@@ -1,13 +1,23 @@
+#pragma once
+
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+
 #include "GamepadAdapter.hpp"
 #include "IdleManager.hpp"
+#include "Link.hpp"
+#include "Logger.hpp"
 
-class Main {
+class Main : public QGuiApplication {
     public:
-        explicit Main() = default;
-        ~Main()         = default;
-        int run(int argc, char* argv[]);
+        explicit Main(int argc, char* argv[]);
+        ~Main();
 
     private:
-        GamepadAdapter gamepadAdapter;
-        IdleManager    idleManager;
+        const Logger& logger;
+
+        QQmlApplicationEngine engine;
+        GamepadAdapter        gamepadAdapter;
+        IdleManager           idleManager;
+        Link                  link;
 };

@@ -4,38 +4,73 @@ import QtQuick.Window
 import QtQuick.Layouts
 
 ApplicationWindow {
+    id: mainWindow
     visibility: Window.FullScreen
     flags: Qt.FramelessWindowHint
 
-    Column {
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.margins: 20
-        spacing: 10
+    StackView {
+        id: stackView
+        anchors.fill: parent
+        initialItem: mainContent
+        // pushEnter: null
+        // pushExit: null
+        // popEnter: null
+        // popExit: null
+    }
 
-        Button {
-            text: "Test 1"
-            onClicked: console.log("Test 1 clicked")
+    Rectangle {
+        id: mainContent
+        width: parent.width
+        height: parent.height
+        color: "black"
+
+        Column {
+            anchors.left: parent.left
+            anchors.bottom: parent.bottom
+            anchors.margins: 20
+            spacing: 10
+
+            Button {
+                id: firstButton
+                focus: true
+                text: "Test 1"
+                onClicked: {
+                    console.log("Test 1 clicked");
+                    stackView.push("LoadingPage.qml");
+                    link.start();
+                }
+
+                Keys.onEnterPressed: clicked()
+                Keys.onReturnPressed: clicked()
+                Keys.onSpacePressed: function (event) {
+                    // Prevent default space key behavior
+                    event.accepted = true;
+                }
+            }
+
+            Button {
+                text: "Exit"
+                onClicked: Qt.quit()
+
+                Keys.onEnterPressed: clicked()
+                Keys.onReturnPressed: clicked()
+                Keys.onSpacePressed: function (event) {
+                    // Prevent default space key behavior
+                    event.accepted = true;
+                }
+            }
         }
+    }
 
-        Button {
-            text: "Test 2"
-            onClicked: console.log("Test 2 clicked")
-        }
-
-        Button {
-            text: "Test 3"
-            onClicked: console.log("Test 3 clicked")
-        }
-
-        Button {
-            text: "Exit"
-            onClicked: Qt.quit()
+    Connections {
+        target: link
+        function finished() {
+            stackView.pop();
         }
     }
 
     Component.onCompleted: {
-        Screen.primary.virtualGeometry.width = width
-        Screen.primary.virtualGeometry.height = height
+        Screen.primary.virtualGeometry.width = width;
+        Screen.primary.virtualGeometry.height = height;
     }
 }

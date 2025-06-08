@@ -8,6 +8,7 @@
 
 class IdleManager : public QObject {
         Q_OBJECT
+
     public:
         explicit IdleManager(QObject* parent = nullptr);
         ~IdleManager();
@@ -17,8 +18,8 @@ class IdleManager : public QObject {
         bool eventFilter(QObject* watched, QEvent* event) override;
 
     private:
-        QTimer idleTimer;
-        RateLimiter idleTimerResetter;
+        QTimer            idleTimer;
+        RateLimiterByTime idleTimerResetter;
 
         void onIdle();
         void setupIdleTimer();

@@ -1,10 +1,10 @@
+#pragma once
+
 #include <QElapsedTimer>
 
-#include "Logger.hpp"
-
-class RateLimiter {
+class RateLimiterByTime {
     public:
-        explicit RateLimiter(qint64 _intervalMs, std::function<void()> _function)
+        explicit RateLimiterByTime(qint64 _intervalMs, std::function<void()> _function)
             : intervalMs(_intervalMs)
             , function(_function) {
             timer.start();
@@ -12,7 +12,6 @@ class RateLimiter {
 
         void execute() {
             if (timer.elapsed() < intervalMs) {
-                logDebug() << "Rate limited: Ignored";
                 return;
             }
             function();
@@ -22,5 +21,26 @@ class RateLimiter {
     private:
         qint64                intervalMs;
         QElapsedTimer         timer;
+        std::function<void()> function;
+};
+
+class RateLimiterByCount {
+    public:
+        explicit RateLimiterByCount(uint64_t _callInterval, std::function<void()> _function)
+            : callInterval(_callInterval)
+            , function(_function) {
+        }
+
+        void execute() {
+            if ((callCount++) < callInterval) {
+                return;
+            }
+            function();
+            callCount = 0;
+        }
+
+    private:
+        uint64_t              callCount;
+        uint64_t              callInterval;
         std::function<void()> function;
 };

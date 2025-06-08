@@ -1,6 +1,6 @@
 #include <QGuiApplication>
 
-#include "utils/Logger.hpp"
+#include "Logger.hpp"
 #include "IdleManager.hpp"
 
 namespace {
@@ -12,21 +12,16 @@ IdleManager::IdleManager(QObject* parent)
     : QObject(parent)
     , idleTimer(this)
     , idleTimerResetter(1000, std::bind(&IdleManager::onIdle, this)) {
-    // Install global event filter for keyboard and mouse
-    qApp->installEventFilter(this);
-
     connect(&idleTimer, &QTimer::timeout, this, &IdleManager::onIdle);
     setupIdleTimer();
 }
 
 IdleManager::~IdleManager() {
     idleTimer.stop();
-
-    qApp->removeEventFilter(this);
 }
 
 bool IdleManager::eventFilter(QObject* watched, QEvent* event) {
-    logDebug() << "QEvent: " << event->type();
+    logDebug << "QEvent: " << event->type();
 
     if (event->type() >= QEVENT_MOUSE_KEYBOARD_MIN_INCLUDE && event->type() <= QEVENT_MOUSE_KEYBOARD_MAX_INCLUDE) {
         idleTimerResetter.execute();
@@ -38,7 +33,7 @@ bool IdleManager::eventFilter(QObject* watched, QEvent* event) {
 
 void IdleManager::onIdle() {
     // TODO
-    logDebug() << "onIdle";
+    logDebug << "onIdle";
 }
 
 void IdleManager::setupIdleTimer() {
