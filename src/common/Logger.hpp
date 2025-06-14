@@ -9,14 +9,14 @@
 namespace Common {
 class Logger {
     public:
-        explicit Logger(const std::filesystem::path& _logDir, const std::string& _logFileNameFormat,
+        explicit Logger(const std::filesystem::path& _logDir, const std::string_view& _logFileNameFormat,
                         uintmax_t _maxLogFileSizeBytes, size_t _maxLogFilesToKeep);
         ~Logger();
 
         Logger& operator<<(const std::string& msg);
 
     private:
-        const std::string&           logFileNameFormat;
+        const std::string_view&      logFileNameFormat;
         const std::filesystem::path& logDir;
         std::filesystem::path        logFile;
         std::ofstream                logTextStream;
@@ -28,10 +28,5 @@ class Logger {
         void openLogFile();
         void rotateLogFile();
         void removeOldLogFiles();
-
-        // template <class... Args>
-        // std::string newLogFileName(Args&&... args) {
-        //     return std::format(logFileNameFormat, args);
-        // }
 };
 } // namespace Common

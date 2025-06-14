@@ -1,6 +1,6 @@
 #include <QGuiApplication>
 
-#include "../utils/Logger.hpp"
+#include "Logger.hpp"
 #include "IdleManager.hpp"
 
 namespace {

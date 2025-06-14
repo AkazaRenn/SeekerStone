@@ -1,3 +1,4 @@
+#include <format>
 #include <iostream>
 
 #include "Logger.hpp"
@@ -7,7 +8,7 @@ const uint64_t LOG_RORATION_CHECK_INTERVAL = 20;
 } // namespace
 
 namespace Common {
-Logger::Logger(const std::filesystem::path& _logDir, const std::string& _logFileNameFormat,
+Logger::Logger(const std::filesystem::path& _logDir, const std::string_view& _logFileNameFormat,
                uintmax_t _maxLogFileSizeBytes, size_t _maxLogFilesToKeep)
     : logFileNameFormat(_logFileNameFormat)
     , logDir(_logDir)
@@ -43,6 +44,8 @@ void Logger::openLogFile() {
     const auto                    now        = std::chrono::system_clock::now();
     const auto                    nowSeconds = std::chrono::time_point_cast<std::chrono::seconds>(now);
     const std::chrono::zoned_time localTime{std::chrono::current_zone(), nowSeconds};
+    // TODO: Only available in C++ 26
+    // const std::string             logFileName = std::format(std::runtime_format(logFileNameFormat), localTime);
     const std::string             logFileName = std::format("SeekerStone {:%Y-%m-%d %H:%M:%S}.log", localTime);
 
     logFile = logDir / logFileName;

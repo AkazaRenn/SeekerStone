@@ -14,10 +14,7 @@
 #define logWarning qWarning()
 #define logError   qCritical()
 
-const char* toString(QtMsgType type);
-std::string nowString();
-
-namespace SeekerStone {
+namespace SeekerStone::Components {
 class Logger {
     public:
         static Logger& instance();
@@ -32,4 +29,4 @@ class Logger {
 
         std::filesystem::path getLogDir();
 };
-} // namespace SeekerStone
+} // namespace SeekerStone::Components

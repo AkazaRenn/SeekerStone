@@ -1,7 +1,7 @@
 #include <QGuiApplication>
 #include <QKeyEvent>
 
-#include "../utils/Logger.hpp"
+#include "Logger.hpp"
 #include "GamepadAdapter.hpp"
 
 namespace {

@@ -1,8 +1,8 @@
 #include <QQmlContext>
 
 #include "Main.hpp"
-#include "utils/Logger.hpp"
-#include "utils/Macros.hpp"
+#include "components/Logger.hpp"
+#include "common/Macros.hpp"
 
 namespace SeekerStone {
 Main::Main(int argc, char* argv[])

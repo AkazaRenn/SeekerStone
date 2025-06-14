@@ -1,6 +1,6 @@
 #include <QTimer>
 
-#include "../utils/Logger.hpp"
+#include "Logger.hpp"
 #include "Link.hpp"
 
 namespace SeekerStone::Components {
