@@ -1,18 +1,19 @@
 #include <QGuiApplication>
 
-#include "Logger.hpp"
 #include "IdleManager.hpp"
+#include "Logger.hpp"
 
 namespace {
 constexpr QEvent::Type QEVENT_MOUSE_KEYBOARD_MIN_INCLUDE = QEvent::Type::MouseButtonPress;
 constexpr QEvent::Type QEVENT_MOUSE_KEYBOARD_MAX_INCLUDE = QEvent::Type::KeyRelease;
+constexpr uintmax_t    IDLE_TIMER_INTERVAL_NS            = 1'000'000'000;
 } // namespace
 
 namespace SeekerStone::Components {
 IdleManager::IdleManager(QObject* parent)
     : QObject(parent)
     , idleTimer(this)
-    , idleTimerResetter(1000, std::bind(&IdleManager::onIdle, this)) {
+    , idleTimerResetter(IDLE_TIMER_INTERVAL_NS, std::bind(&IdleManager::onIdle, this)) {
     connect(&idleTimer, &QTimer::timeout, this, &IdleManager::onIdle);
     setupIdleTimer();
 }

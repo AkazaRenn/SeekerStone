@@ -1,18 +1,20 @@
 #pragma once
 
-#include <QElapsedTimer>
+#include <functional>
+
+#include "ElapsedTimer.hpp"
 
 namespace Common {
 class RateLimiterByTime {
     public:
-        explicit RateLimiterByTime(qint64 _intervalMs, std::function<void()> _function)
-            : intervalMs(_intervalMs)
+        explicit RateLimiterByTime(uintmax_t _intervalNs, std::function<void()> _function)
+            : intervalNs(_intervalNs)
             , function(_function) {
             timer.start();
         }
 
         void execute() {
-            if (timer.elapsed() < intervalMs) {
+            if (timer.elapsed() < intervalNs) {
                 return;
             }
             function();
@@ -20,8 +22,8 @@ class RateLimiterByTime {
         }
 
     private:
-        qint64                intervalMs;
-        QElapsedTimer         timer;
+        uintmax_t             intervalNs;
+        ElapsedTimer          timer;
         std::function<void()> function;
 };
 
