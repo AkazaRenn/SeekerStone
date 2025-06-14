@@ -2,6 +2,7 @@
 
 #include <QElapsedTimer>
 
+namespace Common {
 class RateLimiterByTime {
     public:
         explicit RateLimiterByTime(qint64 _intervalMs, std::function<void()> _function)
@@ -44,3 +45,4 @@ class RateLimiterByCount {
         uint64_t              callInterval;
         std::function<void()> function;
 };
+} // namespace Common

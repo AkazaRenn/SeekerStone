@@ -8,6 +8,7 @@ constexpr QEvent::Type QEVENT_MOUSE_KEYBOARD_MIN_INCLUDE = QEvent::Type::MouseBu
 constexpr QEvent::Type QEVENT_MOUSE_KEYBOARD_MAX_INCLUDE = QEvent::Type::KeyRelease;
 } // namespace
 
+namespace SeekerStone::Components {
 IdleManager::IdleManager(QObject* parent)
     : QObject(parent)
     , idleTimer(this)
@@ -42,3 +43,4 @@ void IdleManager::setupIdleTimer() {
     idleTimer.setSingleShot(true);
     idleTimer.start();
 }
+} // namespace SeekerStone::Components

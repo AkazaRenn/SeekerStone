@@ -1,8 +1,8 @@
 #include <QGuiApplication>
 #include <QKeyEvent>
 
-#include "GamepadAdapter.hpp"
 #include "../utils/Logger.hpp"
+#include "GamepadAdapter.hpp"
 
 namespace {
 constexpr SDL_EventType SDL_EVENT_GAMEPAD_MIN_INCLUDE = SDL_EVENT_GAMEPAD_AXIS_MOTION;
@@ -12,9 +12,10 @@ constexpr Sint16        SDL_TRIGGER_AXIS_VALUE_MAX    = SDL_JOYSTICK_AXIS_MAX;
 constexpr Sint16        SDL_TRIGGER_AXIS_VALUE_CENTER = (SDL_TRIGGER_AXIS_VALUE_MAX + SDL_TRIGGER_AXIS_VALUE_MIN) / 2;
 } // namespace
 
+namespace SeekerStone::Components {
 GamepadAdapter::GamepadAdapter(QObject* parent)
-    : QObject(parent),
-    sdlEventThread(nullptr, sdlThreadCleanup){
+    : QObject(parent)
+    , sdlEventThread(nullptr, sdlThreadCleanup) {
     // Initialize SDL subsystems
     if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_GAMEPAD) < 0) {
         logError << "SDL could not initialize! SDL Error:" << SDL_GetError();
@@ -108,3 +109,4 @@ void GamepadAdapter::onGamepadAxis(Sint16 axisValue, SDL_GamepadAxis axis) {
     gamepadAxisAsButtonMapping.at(axis).second = qtEvent;
     QGuiApplication::postEvent(QGuiApplication::focusObject(), new QKeyEvent(qtEvent, qtKey, Qt::NoModifier));
 }
+} // namespace SeekerStone::Components

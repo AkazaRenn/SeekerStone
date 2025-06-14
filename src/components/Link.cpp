@@ -3,6 +3,7 @@
 #include "../utils/Logger.hpp"
 #include "Link.hpp"
 
+namespace SeekerStone::Components {
 Link::Link(QObject* parent)
     : QObject(parent) {
 }
@@ -14,3 +15,4 @@ void Link::start() {
         emit finished(0);
     });
 }
+} // namespace SeekerStone::Components

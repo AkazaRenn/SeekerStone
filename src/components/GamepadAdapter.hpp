@@ -5,6 +5,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_gamepad.h>
 
+namespace SeekerStone::Components {
 class GamepadAdapter : public QObject {
         Q_OBJECT
     public:
@@ -41,3 +42,4 @@ class GamepadAdapter : public QObject {
         void signalGamepadAction();
         void signalGamepadConnected();
 };
+} // namespace SeekerStone::Components

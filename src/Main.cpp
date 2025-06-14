@@ -2,7 +2,9 @@
 
 #include "Main.hpp"
 #include "utils/Logger.hpp"
+#include "utils/Macros.hpp"
 
+namespace SeekerStone {
 Main::Main(int argc, char* argv[])
     : QGuiApplication(argc, argv) {
     QObject::connect(
@@ -26,7 +28,8 @@ Main::~Main() {
     removeEventFilter(&idleManager);
     logInfo << "Exited";
 }
+} // namespace SeekerStone
 
 int main(int argc, char* argv[]) {
-    return Main(argc, argv).exec();
+    return SeekerStone::Main(argc, argv).exec();
 }

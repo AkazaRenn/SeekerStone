@@ -4,8 +4,9 @@
 #include <QObject>
 #include <QTimer>
 
-#include "../utils/RateLimiter.hpp"
+#include "../common/RateLimiter.hpp"
 
+namespace SeekerStone::Components {
 class IdleManager : public QObject {
         Q_OBJECT
 
@@ -18,9 +19,10 @@ class IdleManager : public QObject {
         bool eventFilter(QObject* watched, QEvent* event) override;
 
     private:
-        QTimer            idleTimer;
-        RateLimiterByTime idleTimerResetter;
+        QTimer                    idleTimer;
+        Common::RateLimiterByTime idleTimerResetter;
 
         void onIdle();
         void setupIdleTimer();
 };
+} // namespace SeekerStone::Components

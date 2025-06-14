@@ -3,30 +3,27 @@
 #include <iostream>
 
 #include "Logger.hpp"
+#include "Macros.hpp"
 
 namespace {
-const qint64   MAX_LOG_FILE_SIZE           = 10 * 1024 * 1024;
-const uint64_t LOG_RORATION_CHECK_INTERVAL = 100;
-const uint8_t  MAX_LOG_FILES_TO_KEEP       = 5;
-const Logger&  LOGGER                      = Logger::instance();
+const uintmax_t            MAX_LOG_FILE_SIZE_BYTES = 10 * 1024 * 1024;
+const size_t               MAX_LOG_FILES_TO_KEEP   = 5;
+const SeekerStone::Logger& LOGGER                  = SeekerStone::Logger::instance();
 } // namespace
 
+namespace SeekerStone {
 Logger& Logger::instance() {
     static Logger instance;
     return instance;
 }
 
 Logger::Logger()
-    : logDir(getLogDir())
-    , logRotator(LOG_RORATION_CHECK_INTERVAL, std::bind(&Logger::rotateLogFile, this)) {
-    openLogFile();
+    : logger(getLogDir(), "'SeekerStone' yyyy-MM-dd hh:mm:ss'.log'", MAX_LOG_FILE_SIZE_BYTES, MAX_LOG_FILES_TO_KEEP) {
     qInstallMessageHandler(messageHandler);
 }
 
 Logger::~Logger() {
     qInstallMessageHandler(nullptr);
-    std::lock_guard<std::mutex> lock(logTextStreamMutex);
-    logFile.close();
 }
 
 std::filesystem::path Logger::getLogDir() {
@@ -45,85 +42,30 @@ std::filesystem::path Logger::getLogDir() {
     return logDirPath;
 }
 
-void Logger::openLogFile() {
-    const std::string logFileName = std::string(APP_NAME) + ' ' +
-                                    QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss").toStdString() + ".log";
-    logFile.setFileName(logDir / logFileName);
-
-    {
-        std::lock_guard<std::mutex> lock(logTextStreamMutex);
-        if (!logFile.isOpen()) {
-            if (logFile.open(QIODevice::Append | QIODevice::Text)) {
-                logTextStream.setDevice(&logFile);
-                std::cout << "Writing logs to: \"" << logFile.fileName().toStdString() << '\"' << std::endl;
-            }
-        }
-    }
-
-    // Remove old logs
-    QDir qLogDir(logDir);
-    qLogDir.setFilter(QDir::Files | QDir::NoDotAndDotDot);
-    qLogDir.setNameFilters(QStringList("*.log"));
-    qLogDir.setSorting(QDir::Time);
-
-    QFileInfoList logFiles = qLogDir.entryInfoList();
-
-    if (logFiles.size() > MAX_LOG_FILES_TO_KEEP) {
-        int filesToDelete = logFiles.size() - MAX_LOG_FILES_TO_KEEP;
-        for (int i = logFiles.size() - 1; i >= MAX_LOG_FILES_TO_KEEP; i--) {
-            qLogDir.remove(logFiles[i].fileName());
-        }
-    }
-}
-
-QString Logger::nanosecondsNow() {
-    const auto now         = std::chrono::system_clock::now();
-    const auto duration    = now.time_since_epoch();
-    const auto nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count() % 1'000'000'000;
-
-    return QString::number(nanoseconds).rightJustified(9, '0');
-}
-
-void Logger::rotateLogFile() {
-    if (logFile.size() > MAX_LOG_FILE_SIZE) {
-        openLogFile();
-    }
-}
-
 void Logger::messageHandler(QtMsgType type, const QMessageLogContext& context, const QString& msg) {
-    instance().writeLogToFile(type, context, msg);
+    instance().logger << std::format("[{}][{}][{}:{}]{}", nowString(), toString(type),
+                                     std::filesystem::path(context.file).filename().string(), context.line,
+                                     msg.toStdString());
 }
+} // namespace SeekerStone
 
-void Logger::writeLogToFile(QtMsgType type, const QMessageLogContext& context, const QString& msg) {
-    const char* level;
+const char* toString(QtMsgType type) {
     switch (type) {
         case QtDebugMsg:
-            level = "DBG";
-            break;
+            return "DBG";
         case QtInfoMsg:
-            level = "INF";
-            break;
+            return "INF";
         case QtWarningMsg:
-            level = "WRN";
-            break;
+            return "WRN";
         case QtCriticalMsg:
-            level = "ERR";
-            break;
+            return "ERR";
         default:
-            level = "UKN";
-            break;
+            return "UKN";
     }
+}
 
-    {
-        std::lock_guard<std::mutex> lock(logTextStreamMutex);
-        if (logTextStream.device()) {
-            logTextStream << "[" << QDateTime::currentDateTime().toString("hh:mm:ss") << '.' << nanosecondsNow() << "]"
-                          << "[" << level << "]"
-                          << "[" << std::filesystem::path(context.file).filename().string().c_str() << ":"
-                          << context.line << "]" << msg << '\n';
-            logTextStream.flush();
-        }
-    }
-
-    logRotator.execute();
+std::string nowString() {
+    const auto now       = std::chrono::system_clock::now();
+    const auto localTime = std::chrono::zoned_time{std::chrono::current_zone(), now};
+    return std::format("{:%H:%M:%S}", localTime);
 }

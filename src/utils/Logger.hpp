@@ -1,13 +1,8 @@
 #pragma once
 
 #include <QDebug>
-#include <QFile>
-#include <QMessageLogger>
-#include <QTextStream>
-#include <filesystem>
-#include <mutex>
 
-#include "RateLimiter.hpp"
+#include "../common/Logger.hpp"
 
 #ifdef QT_DEBUG
 #define logDebug logInfo
@@ -19,6 +14,10 @@
 #define logWarning qWarning()
 #define logError   qCritical()
 
+const char* toString(QtMsgType type);
+std::string nowString();
+
+namespace SeekerStone {
 class Logger {
     public:
         static Logger& instance();
@@ -26,18 +25,11 @@ class Logger {
     private:
         static void messageHandler(QtMsgType type, const QMessageLogContext& context, const QString& msg);
 
+        Common::Logger logger;
+
         explicit Logger();
         ~Logger();
 
-        QFile                       logFile;
-        const std::filesystem::path logDir;
-        QTextStream                 logTextStream;
-        std::mutex                  logTextStreamMutex;
-        RateLimiterByCount          logRotator;
-
-        void                  openLogFile();
         std::filesystem::path getLogDir();
-        QString               nanosecondsNow();
-        void                  rotateLogFile();
-        void                  writeLogToFile(QtMsgType type, const QMessageLogContext& context, const QString& msg);
 };
+} // namespace SeekerStone
