@@ -18,11 +18,6 @@ Main::Main(int argc, char* argv[])
     initialize();
 }
 
-Main::~Main() {
-    removeEventFilter(&idleManager);
-    logInfo << "Exiting";
-}
-
 void Main::initialize() {
     // Expose backend to QML
     engine.rootContext()->setContextProperty("link", &link);
@@ -34,5 +29,7 @@ void Main::initialize() {
 } // namespace SeekerStone
 
 int main(int argc, char* argv[]) {
-    return SeekerStone::Main(argc, argv).exec();
+    int exitCode = SeekerStone::Main(argc, argv).exec();
+    logInfo << "Exiting with code:" << exitCode;
+    return exitCode;
 }

@@ -10,7 +10,7 @@ namespace SeekerStone {
 class Main : public QGuiApplication {
     public:
         explicit Main(int argc, char* argv[]);
-        ~Main();
+        ~Main() = default;
 
     private:
         QQmlApplicationEngine      engine;
