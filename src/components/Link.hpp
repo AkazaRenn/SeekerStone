@@ -8,7 +8,6 @@ class Link : public QObject {
 
     public:
         explicit Link(QObject* parent = nullptr);
-        ~Link() = default;
 
     public slots:
         void start();

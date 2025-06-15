@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QEvent>
+#include <QGuiApplication>
 #include <QObject>
 #include <QTimer>
 
@@ -11,7 +12,7 @@ class IdleManager : public QObject {
         Q_OBJECT
 
     public:
-        explicit IdleManager(QObject* parent = nullptr);
+        explicit IdleManager(QGuiApplication& _main, QObject* parent = nullptr);
         ~IdleManager();
 
     protected:
@@ -21,6 +22,7 @@ class IdleManager : public QObject {
     private:
         QTimer                    idleTimer;
         Common::RateLimiterByTime idleTimerResetter;
+        QGuiApplication&          main;
 
         void onIdle();
         void setupIdleTimer();

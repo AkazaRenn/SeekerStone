@@ -5,9 +5,6 @@
 namespace Common {
 class ElapsedTimer {
     public:
-        ElapsedTimer()  = default;
-        ~ElapsedTimer() = default;
-
         void start() {
             startTime = std::chrono::steady_clock::now();
         }

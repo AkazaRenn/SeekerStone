@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
 #include "components/GamepadAdapter.hpp"
@@ -18,5 +17,7 @@ class Main : public QGuiApplication {
         Components::GamepadAdapter gamepadAdapter;
         Components::IdleManager    idleManager;
         Components::Link           link;
+
+        void initialize();
 };
 } // namespace SeekerStone

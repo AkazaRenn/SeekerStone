@@ -2,7 +2,7 @@
 
 #include <QDebug>
 
-#include "../common/Logger.hpp"
+#include "../common/LoggerAsync.hpp"
 
 #ifdef QT_DEBUG
 #define logDebug logInfo
@@ -22,7 +22,7 @@ class Logger {
     private:
         static void messageHandler(QtMsgType type, const QMessageLogContext& context, const QString& msg);
 
-        Common::Logger logger;
+        Common::LoggerAsync logger;
 
         explicit Logger();
         ~Logger();

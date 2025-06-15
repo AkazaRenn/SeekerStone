@@ -10,8 +10,7 @@ class GamepadAdapter : public QObject {
         Q_OBJECT
     public:
         explicit GamepadAdapter(QObject* parent = nullptr);
-        ~GamepadAdapter() = default;
-
+        
     private:
         std::unique_ptr<SDL_Thread, void (*)(SDL_Thread*)> sdlEventThread;
 

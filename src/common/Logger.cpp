@@ -22,7 +22,6 @@ Logger::~Logger() {
     std::lock_guard<std::mutex> lock(logTextStreamMutex);
     if (logTextStream.is_open()) {
         logTextStream.flush();
-        logTextStream.close();
     }
 }
 
