@@ -1,8 +1,7 @@
-#include <QGuiApplication>
 #include <QKeyEvent>
 
-#include "Logger.hpp"
 #include "GamepadAdapter.hpp"
+#include "Logger.hpp"
 
 namespace {
 constexpr SDL_EventType SDL_EVENT_GAMEPAD_MIN_INCLUDE = SDL_EVENT_GAMEPAD_AXIS_MOTION;
@@ -13,8 +12,9 @@ constexpr Sint16        SDL_TRIGGER_AXIS_VALUE_CENTER = (SDL_TRIGGER_AXIS_VALUE_
 } // namespace
 
 namespace SeekerStone::Components {
-GamepadAdapter::GamepadAdapter(QObject* parent)
+GamepadAdapter::GamepadAdapter(QGuiApplication& _main, QObject* parent)
     : QObject(parent)
+    , main(_main)
     , sdlEventThread(nullptr, sdlThreadCleanup) {
     // Initialize SDL subsystems
     if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_GAMEPAD) < 0) {
@@ -91,7 +91,7 @@ void GamepadAdapter::onGamepadButton(bool buttonDown, SDL_GamepadButton button) 
         return;
     }
 
-    QGuiApplication::postEvent(QGuiApplication::focusObject(), new QKeyEvent(qtEvent, qtKey, Qt::NoModifier));
+    main.postEvent(main.focusObject(), new QKeyEvent(qtEvent, qtKey, Qt::NoModifier));
 }
 
 void GamepadAdapter::onGamepadAxis(Sint16 axisValue, SDL_GamepadAxis axis) {
@@ -107,6 +107,6 @@ void GamepadAdapter::onGamepadAxis(Sint16 axisValue, SDL_GamepadAxis axis) {
     }
 
     gamepadAxisAsButtonMapping.at(axis).second = qtEvent;
-    QGuiApplication::postEvent(QGuiApplication::focusObject(), new QKeyEvent(qtEvent, qtKey, Qt::NoModifier));
+    main.postEvent(main.focusObject(), new QKeyEvent(qtEvent, qtKey, Qt::NoModifier));
 }
 } // namespace SeekerStone::Components

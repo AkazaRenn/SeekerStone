@@ -7,6 +7,7 @@
 namespace SeekerStone {
 Main::Main(int argc, char* argv[])
     : QGuiApplication(argc, argv)
+    , gamepadAdapter(*this)
     , idleManager(*this) {
     QObject::connect(
         &engine, &QQmlApplicationEngine::objectCreationFailed, this,
@@ -15,10 +16,6 @@ Main::Main(int argc, char* argv[])
         },
         Qt::QueuedConnection);
 
-    initialize();
-}
-
-void Main::initialize() {
     // Expose backend to QML
     engine.rootContext()->setContextProperty("link", &link);
 

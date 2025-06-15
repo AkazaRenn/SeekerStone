@@ -20,9 +20,9 @@ class IdleManager : public QObject {
         bool eventFilter(QObject* watched, QEvent* event) override;
 
     private:
+        QGuiApplication&          main;
         QTimer                    idleTimer;
         Common::RateLimiterByTime idleTimerResetter;
-        QGuiApplication&          main;
 
         void onIdle();
         void setupIdleTimer();

@@ -17,7 +17,5 @@ class Main : public QGuiApplication {
         Components::GamepadAdapter gamepadAdapter;
         Components::IdleManager    idleManager;
         Components::Link           link;
-
-        void initialize();
 };
 } // namespace SeekerStone

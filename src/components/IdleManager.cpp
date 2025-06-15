@@ -10,9 +10,9 @@ constexpr uintmax_t    IDLE_TIMER_INTERVAL_NS            = 1'000'000'000;
 namespace SeekerStone::Components {
 IdleManager::IdleManager(QGuiApplication& _main, QObject* parent)
     : QObject(parent)
+    , main(_main)
     , idleTimer(this)
-    , idleTimerResetter(IDLE_TIMER_INTERVAL_NS, std::bind(&IdleManager::onIdle, this))
-    , main(_main) {
+    , idleTimerResetter(IDLE_TIMER_INTERVAL_NS, std::bind(&IdleManager::onIdle, this)) {
     connect(&idleTimer, &QTimer::timeout, this, &IdleManager::onIdle);
     setupIdleTimer();
     main.installEventFilter(this);

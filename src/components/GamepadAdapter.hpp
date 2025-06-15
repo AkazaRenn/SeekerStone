@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QEvent>
+#include <QGuiApplication>
 #include <QObject>
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_gamepad.h>
@@ -9,9 +10,10 @@ namespace SeekerStone::Components {
 class GamepadAdapter : public QObject {
         Q_OBJECT
     public:
-        explicit GamepadAdapter(QObject* parent = nullptr);
-        
+        explicit GamepadAdapter(QGuiApplication& _main, QObject* parent = nullptr);
+
     private:
+        QGuiApplication&                                   main;
         std::unique_ptr<SDL_Thread, void (*)(SDL_Thread*)> sdlEventThread;
 
         std::unordered_map<SDL_GamepadButton, Qt::Key> gamepadButtonMapping = {
