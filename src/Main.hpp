@@ -5,6 +5,7 @@
 #include "components/GamepadAdapter.hpp"
 #include "components/IdleManager.hpp"
 #include "components/Link.hpp"
+#include "components/Settings.hpp"
 
 namespace SeekerStone {
 class Main : public QGuiApplication {
@@ -14,6 +15,7 @@ class Main : public QGuiApplication {
 
     private:
         QQmlApplicationEngine      engine;
+        Components::Settings       settings;
         Components::GamepadAdapter gamepadAdapter;
         Components::IdleManager    idleManager;
         Components::Link           link;
