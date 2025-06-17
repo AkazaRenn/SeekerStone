@@ -59,6 +59,7 @@ class Settings : public Common::Settings::RootGroup<QVariant> {
         static QString fullKey(std::vector<std::reference_wrapper<const std::string>>& keyStack);
 
     public:
+        SETTINGS_GROUP_BEGIN(general0);
         SETTINGS_ENTRY(option1, bool, true);
         SETTINGS_ENTRY(option2, int, 5);
         SETTINGS_ENTRY(option3, QString, "fdsa");
@@ -72,5 +73,6 @@ class Settings : public Common::Settings::RootGroup<QVariant> {
         SETTINGS_ENTRY(option3, QString, "fdsa");
         SETTINGS_GROUP_END(group2);
         SETTINGS_GROUP_END(group1);
+        SETTINGS_GROUP_END(general0);
 };
 } // namespace SeekerStone::Components
