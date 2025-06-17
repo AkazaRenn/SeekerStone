@@ -8,10 +8,10 @@
 #include "components/Settings.hpp"
 
 namespace SeekerStone {
-class Main : public QGuiApplication {
+class App : public QGuiApplication {
     public:
-        explicit Main(int argc, char* argv[]);
-        ~Main() = default;
+        explicit App(int argc, char* argv[]);
+        ~App() = default;
 
     private:
         QQmlApplicationEngine      engine;

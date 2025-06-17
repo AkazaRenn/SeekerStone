@@ -1,11 +1,11 @@
 #include <QQmlContext>
 
-#include "Main.hpp"
+#include "App.hpp"
 #include "common/Macros.hpp"
 #include "components/Logger.hpp"
 
 namespace SeekerStone {
-Main::Main(int argc, char* argv[])
+App::App(int argc, char* argv[])
     : QGuiApplication(argc, argv)
     , gamepadAdapter(*this)
     , idleManager(*this) {
@@ -24,9 +24,3 @@ Main::Main(int argc, char* argv[])
     logInfo << "Initialized";
 }
 } // namespace SeekerStone
-
-int main(int argc, char* argv[]) {
-    int exitCode = SeekerStone::Main(argc, argv).exec();
-    logInfo << "Exiting with code:" << exitCode;
-    return exitCode;
-}

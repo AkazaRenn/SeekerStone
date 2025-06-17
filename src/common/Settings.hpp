@@ -8,13 +8,12 @@ namespace Common::Settings {
 template <typename ValueContainer>
 class Group {
     public:
-        virtual bool exists(std::vector<std::reference_wrapper<const std::string>>& keyStack) const = 0;
+        virtual bool exists(std::vector<std::string_view>& keyStack) const = 0;
 
-        virtual ValueContainer get(std::vector<std::reference_wrapper<const std::string>>& keyStack,
-                                   const ValueContainer&                                   defaultValue) const = 0;
+        virtual ValueContainer get(std::vector<std::string_view>& keyStack,
+                                   const ValueContainer&          defaultValue) const = 0;
 
-        virtual void set(std::vector<std::reference_wrapper<const std::string>>& keyStack,
-                         const ValueContainer&                                   value) = 0;
+        virtual void set(std::vector<std::string_view>& keyStack, const ValueContainer& value) = 0;
 };
 
 template <typename ValueContainer>
@@ -28,19 +27,17 @@ class InnerGroup : public Group<ValueContainer> {
             , parentGroup(_parentGroup) {
         }
 
-        bool exists(std::vector<std::reference_wrapper<const std::string>>& keyStack) const override {
+        bool exists(std::vector<std::string_view>& keyStack) const override {
             keyStack.push_back(key);
             return parentGroup.exists(keyStack);
         }
 
-        ValueContainer get(std::vector<std::reference_wrapper<const std::string>>& keyStack,
-                           const ValueContainer&                                   defaultValue) const override {
+        ValueContainer get(std::vector<std::string_view>& keyStack, const ValueContainer& defaultValue) const override {
             keyStack.push_back(key);
             return parentGroup.get(keyStack, defaultValue);
         }
 
-        void set(std::vector<std::reference_wrapper<const std::string>>& keyStack,
-                 const ValueContainer&                                   value) override {
+        void set(std::vector<std::string_view>& keyStack, const ValueContainer& value) override {
             keyStack.push_back(key);
             parentGroup.set(keyStack, value);
         }
@@ -84,17 +81,17 @@ class Entry {
         ValueType                                             value;
 
         ValueType getValue(const ValueType& defaultValue) const {
-            std::vector<std::reference_wrapper<const std::string>> keyStack{key};
+            std::vector<std::string_view> keyStack{key};
             return valueFromContainer(parentGroup.get(keyStack, createValueContainer(defaultValue)));
         }
 
         void saveValue() {
-            std::vector<std::reference_wrapper<const std::string>> keyStack{key};
+            std::vector<std::string_view> keyStack{key};
             parentGroup.set(keyStack, createValueContainer(value));
         }
 
         bool exists() {
-            std::vector<std::reference_wrapper<const std::string>> keyStack{key};
+            std::vector<std::string_view> keyStack{key};
             return parentGroup.exists(keyStack);
         }
 };

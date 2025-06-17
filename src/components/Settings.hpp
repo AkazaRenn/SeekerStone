@@ -3,6 +3,7 @@
 #include <QSettings>
 #include <QString>
 #include <QVariant>
+#include <mutex>
 
 #include "../common/Macros.hpp"
 #include "../common/Settings.hpp"
@@ -48,15 +49,15 @@ class Entry : public Common::Settings::Entry<ValueType, QVariant> {
 
 class Settings : public Common::Settings::RootGroup<QVariant> {
     public:
-        bool exists(std::vector<std::reference_wrapper<const std::string>>& keyStack) const override;
-        QVariant get(std::vector<std::reference_wrapper<const std::string>>& keyStack,
-                     const QVariant&                                         defaultValue) const override;
-        void set(std::vector<std::reference_wrapper<const std::string>>& keyStack, const QVariant& value) override;
+        bool     exists(std::vector<std::string_view>& keyStack) const override;
+        QVariant get(std::vector<std::string_view>& keyStack, const QVariant& defaultValue) const override;
+        void     set(std::vector<std::string_view>& keyStack, const QVariant& value) override;
 
     private:
-        QSettings settings{APP_NAME, SETTINGS_FILE_NAME};
+        QSettings          settings{APP_NAME, SETTINGS_FILE_NAME};
+        mutable std::mutex settingsMutex;
 
-        static QString fullKey(std::vector<std::reference_wrapper<const std::string>>& keyStack);
+        static QString fullKey(std::vector<std::string_view>& keyStack);
 
     public:
         SETTINGS_GROUP_BEGIN(general0);
