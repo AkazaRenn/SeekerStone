@@ -35,7 +35,7 @@ class RateLimiterByCount {
         }
 
         void execute() {
-            if ((callCount++) < callInterval) {
+            if (callCount++ < callInterval) {
                 return;
             }
             function();

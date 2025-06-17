@@ -17,7 +17,10 @@ GamepadAdapter::GamepadAdapter(QGuiApplication& _main, QObject* parent)
     , main(_main)
     , sdlEventThread(nullptr, sdlThreadCleanup) {
     // Initialize SDL subsystems
-    if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_GAMEPAD) < 0) {
+    if (!SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1")) {
+        logWarning << "Failed setting SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS hint";
+    }
+    if (!SDL_Init(SDL_INIT_EVENTS | SDL_INIT_GAMEPAD)) {
         logError << "SDL could not initialize! SDL Error:" << SDL_GetError();
     } else {
         sdlEventThread.reset(SDL_CreateThread(sdlEventHandler, "EventThread", this));
@@ -85,10 +88,11 @@ void GamepadAdapter::onGamepadButton(bool buttonDown, SDL_GamepadButton button) 
     Qt::Key      qtKey;
     QEvent::Type qtEvent = buttonDown ? QEvent::KeyPress : QEvent::KeyRelease;
 
-    if (gamepadButtonMapping.contains(button)) {
-        qtKey = gamepadButtonMapping.at(button);
-    } else {
+    const auto it = gamepadButtonMapping.find(button);
+    if (it == gamepadButtonMapping.end()) {
         return;
+    } else {
+        qtKey = it->second;
     }
 
     main.postEvent(main.focusObject(), new QKeyEvent(qtEvent, qtKey, Qt::NoModifier));
